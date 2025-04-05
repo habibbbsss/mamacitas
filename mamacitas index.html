@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mamacita - Plano Semanal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #fff5f0;
+            color: #333;
+            padding-bottom: 80px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #e94e24, #c73d18);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: #ffc045;
+            padding: 12px 15px;
+        }
+        
+        .card-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .card-body {
+            padding: 15px;
+        }
+        
+        .day-card {
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 15px;
+        }
+        
+        .day-title {
+            font-weight: bold;
+            color: #e94e24;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .day-empty {
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            color: #777;
+        }
+        
+        .day-selection {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+        
+        .day-selection:hover {
+            background-color: #f5f5f5;
+            border-color: #ccc;
+        }
+        
+        .day-content {
+            margin-top: 10px;
+        }
+        
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background-color: #e94e24;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #c73d18;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        
+        .meal-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .meal-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .meal-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .meal-price {
+            font-weight: bold;
+            color: #e94e24;
+        }
+        
+        .meal-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+        
+        .info-box {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-size: 14px;
+            border-left: 3px solid #e94e24;
+        }
+        
+        .summary {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .summary-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+        
+        .summary-day {
+            margin-bottom: 15px;
+        }
+        
+        .summary-day-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #ffc045;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+            font-size: 13px;
+        }
+        
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-weight: bold;
+        }
+        
+        .fixed-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            padding: 10px 15px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .cart-count {
+            background-color: #e94e24;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: bold;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: #e94e24;
+            border-bottom-color: #e94e24;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .modal-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #333;
+        }
+        
+        .select-group {
+            margin-bottom: 15px;
+        }
+        
+        .select-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .select-option {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .select-option:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .select-option.selected {
+            background-color: #fff3e0;
+            border-color: #ffc045;
+        }
+        
+        .select-option input {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">Mamacita</div>
+            <div>Plano Semanal de Marmitas</div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Informações de Gramatura -->
+        <div class="info-box">
+            <p><strong>📏 Gramatura média:</strong></p>
+            <ul style="padding-left: 20px; margin-top: 5px;">
+                <li>Proteína: 180g-200g</li>
+                <li>Acompanhamentos: 100g arroz e 50g feijão/lentilha</li>
+                <li>Adicionais: 70g</li>
+                <li>Marmita completa: 420g-450g</li>
+                <li>Lasanhas e Panquecas: 350g</li>
+                <li>Risoto: 400g</li>
+            </ul>
+            <p style="margin-top: 8px; color: #e94e24; font-weight: bold;">Mínimo: 9 unidades por pedido</p>
+        </div>
+        
+        <!-- Sistema de abas -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Selecione suas refeições para 7 dias</div>
+            </div>
+            <div class="card-body">
+                <div class="tab-container">
+                    <div class="tab active" onclick="showTab('week')">Semana</div>
+                    <div class="tab" onclick="showTab('menu')">Cardápio</div>
+                    <div class="tab" onclick="showTab('cart')">Carrinho <span class="cart-count" id="cartBadge">0</span></div>
+                </div>
+                
+                <!-- Aba da semana -->
+                <div id="week-tab" class="tab-content active">
+                    <div class="day-card">
+                        <div class="day-title">Segunda-feira</div>
+                        <div id="monday-content" class="day-content day-empty">
+                            <div class="day-selection" onclick="openDayModal('monday')">
+                                Clique para selecionar refeições para Segunda
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="day-card">
+                        <div class="day-title">Terça-feira</div>
+                        <div id="tuesday-content" class="day-content day-empty">
+                            <div class="day-selection" onclick="openDayModal('tuesday')">
+                                Clique para selecionar refeições para Terça
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="day-card">
+                        <div class="day-title">Quarta-feira</div>
+                        <div id="wednesday-content" class="day-content day-empty">
+                            <div class="day-selection" onclick="openDayModal('wednesday')">
+                                Clique para selecionar refeições para Quarta
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="day-card">
+                        <div class="day-title">Quinta-feira</div>
+                        <div id="thursday-content" class="day-content day-empty">
+                            <div class="day-selection" onclick="openDayModal('thursday')">
+                                Clique para selecionar refeições para Quinta
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="day-card">
+                        <div class="day-title">Sexta-feira</div>
+                        <div id="friday-content" class="day-content day-empty">
+                            <div class="day-selection" onclick="openDayModal('friday')">
+                                Clique para selecionar refeições para Sexta
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="day-card">
+                        <div class="day-title">Sábado</div>
+                        <div id="saturday-content" class="day-content day-empty">
+                            <div class="day-selection" onclick="openDayModal('saturday')">
+                                Clique para selecionar refeições para Sábado
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="day-card">
+                        <div class="day-title">Domingo</div>
+                        <div id="sunday-content" class="day-content day-empty">
+                            <div class="day-selection" onclick="openDayModal('sunday')">
+                                Clique para selecionar refeições para Domingo
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Aba do cardápio -->
+                <div id="menu-tab" class="tab-content">
+                    <h3 style="margin-bottom: 15px; color: #e94e24;">Proteínas</h3>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="margin-bottom: 8px; border-left: 3px solid #e94e24; padding-left: 8px;">🍖 Carne Vermelha</h4>
+                        <div class="meal-item">
+                            <div class="meal-title">Medalhão de Filet Mignon</div>
+                            <div class="meal-desc">Macio e suculento</div>
+                            <div class="meal-price">R$ 45,00</div>
+                            <div style="font-size: 12px; color: #777;">Mínimo: 3 unidades</div>
+                        </div>
+                        
+                        <div class="meal-item">
+                            <div class="meal-title">Carne Moída (Patinho)</div>
+                            <div class="meal-desc">Suculenta e temperada</div>
+                            <div class="meal-price">R$ 45,00</div>
+                            <div style="font-size: 12px; color: #777;">Mínimo: 3 unidades</div>
+                        </div>
+                        
+                        <div class="meal-item">
+                            <div class="meal-title">Lagarto Assado ao Molho Madeira</div>
+                            <div class="meal-desc">Especialidade da Chef Yasna</div>
+                            <div class="meal-price">R$ 45,00</div>
+                            <div style="font-size: 12px; color: #777;">Mínimo: 3 unidades</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="margin-bottom: 8px; border-left: 3px solid #e94e24; padding-left: 8px;">🪵 Carne Branca</h4>
+                        <div class="meal-item">
+                            <div class="meal-title">Frango Assado</div>
+                            <div class="meal-desc">Temperado e suculento</div>
+                            <div class="meal-price">R$ 36,00</div>
+                            <div style="font-size: 12px; color: #777;">Mínimo: 3 unidades</div>
+                        </div>
+                        
+                        <div class="meal-item">
+                            <div class="meal-title">Medalhão de Frango</div>
+                            <div class="meal-desc">Macio e suculento</div>
+                            <div class="meal-price">R$ 36,00</div>
+                            <div style="font-size: 12px; color: #777;">Mínimo: 3 unidades</div>
+                        </div>
+                        
+                        <div class="meal-item">
+                            <div class="meal-title">Frango Desfiado</div>
+                            <div class="meal-desc">Temperado com ervas</div>
+                            <div class="meal-price">R$ 36,00</div>
+                            <div style="font-size: 12px; color: #777;">Mínimo: 3 unidades</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="margin-bottom: 8px; border-left: 3px solid #e94e24; padding-left: 8px;">🪺 Peixe</h4>
+                        <div class="meal-item">
+                            <div class="meal-title">Saint Peter Filé</div>
+                            <div class="meal-desc">Delicado e saboroso</div>
+                            <div class="meal-price">R$ 44,00</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 20px 0 15px 0; color: #e94e24;">Acompanhamentos</h3>
+                    <div class="meal-item">
+                        <div class="meal-title">Arroz</div>
+                        <div class="meal-desc">Branco e soltinho</div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <div class="meal-title">Arroz Integral</div>
+                        <div class="meal-desc">Nutritivo e saudável</div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <div class="meal-title">Feijão</div>
+                        <div class="meal-desc">Sem linguiça e bacon</div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <div class="meal-title">Lentilha</div>
+                        <div class="meal-desc">Com linguiça e bacon</div>
+                    </div>
+                    
+                    <h3 style="margin: 20px 0 15px 0; color: #e94e24;">Adicionais</h3>
+                    <div class="meal-item">
+                        <div class="meal-title">Purê de Mandioquinha</div>
+                        <div class="meal-desc">Cremoso e delicado</div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <div class="meal-title">Purê de Abóbora com Mandioca</div>
+                        <div class="meal-desc">Cremoso e saboroso</div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <div class="meal-title">Legumes no Vapor</div>
+                        <div class="meal-desc">Nutritivos e crocantes</div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <div class="meal-title">Creme de Milho</div>
+                        <div class="meal-desc">Cremoso e doce</div>
+                    </div>
+                    
+                    <h3 style="margin: 20px 0 15px 0; color: #e94e24;">Pratos Especiais</h3>
+                    <div class="meal-item">
+                        <div class="meal-title">Risoto de Camarão</div>
+                        <div class="meal-desc">Cremoso e rico</div>
+                        <div class="meal-price">R$ 49,00</div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <div class="meal-title">Panqueca de Carne</div>
+                        <div class="meal-desc">Macia e saborosa</div>
+                        <div class="meal-price">R$ 29,00</div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <div class="meal-title">Panqueca de Frango</div>
+                        <div class="meal-desc">Leve e cremosa</div>
+                        <div class="meal-price">R$ 29,00</div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <div class="meal-title">Lasanha de Berinjela</div>
+                        <div class="meal-desc">Vegetariana, sem proteína animal</div>
+                        <div class="meal-price">R$ 31,00</div>
+                    </div>
+                    
+                    <div class="meal-item">
+                        <div class="meal-title">Lasanha de Abobrinha</div>
+                        <div class="meal-desc">Vegetariana, sem proteína animal</div>
+                        <div class="meal-price">R$ 31,00</div>
+                    </div>
+                </div>
+                
+                <!-- Aba do carrinho -->
+                <div id="cart-tab" class="tab-content">
+                    <div id="cart-empty" style="text-align: center; padding: 30px 0; color: #777;">
+                        Seu carrinho está vazio.
+                        <p style="margin-top: 10px;">Adicione refeições para a semana na aba Semana.</p>
+                    </div>
+                    
+                    <div id="cart-content" style="display: none;">
+                        <!-- Carrinho será preenchido via JavaScript -->
+                    </div>
+                    
+                    <div id="cart-summary" class="summary" style="display: none;">
+                        <div class="summary-title">Resumo do Pedido</div>
+                        <div id="summary-content">
+                            <!-- Resumo será preenchido via JavaScript -->
+                        </div>
+                        <div class="summary-total">
+                            <div>Total:</div>
+                            <div id="total-price">R$ 0,00</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; text-align: center; display: none;" id="cart-actions">
+                        <button class="btn btn-outline" onclick="clearCart()" style="margin-right: 10px;">Limpar carrinho</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dados para entrega -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Dados para entrega</div>
+            </div>
+            <div class="card-body">
+                <div>
+                    <label for="name">Nome completo:</label>
+                    <input type="text" id="name" placeholder="Digite seu nome completo">
+                </div>
+                
+                <div>
+                    <label for="phone">Telefone/WhatsApp:</label>
+                    <input type="tel" id="phone" placeholder="(XX) XXXXX-XXXX">
+                </div>
+                
+                <div>
+                    <label for="address">Endereço de entrega:</label>
+                    <textarea id="address" placeholder="Rua, número, complemento, bairro, cidade"></textarea>
+                </div>
+                
+                <div>
+                    <label for="delivery">Preferência de entrega:</label>
+                    <select id="delivery">
+                        <option value="">Selecione...</option>
+                        <option value="once">Entrega única (todas as marmitas)</option>
+                        <option value="daily">Entrega diária (conforme cronograma)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="payment">Forma de pagamento:</label>
+                    <select id="payment">
+                        <option value="">Selecione uma opção...</option>
+                        <option>Dinheiro</option>
+                        <option>Pix</option>
+                        <option>Cartão na entrega</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="notes">Observações (opcional):</label>
+                    <textarea id="notes" placeholder="Alguma observação sobre seu pedido?"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para selecionar refeições -->
+    <div id="dayModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-day-title">Selecione para Segunda-feira</span>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            
+            <div id="modal-content">
+                <div class="tab-container" style="margin-top: 5px;">
+                    <div class="tab active" onclick="showModalTab('custom')">Marmita Personalizada</div>
+                    <div class="tab" onclick="showModalTab('special')">Pratos Especiais</div>
+                </div>
+                
+                <!-- Tab de marmita personalizada -->
+                <div id="custom-tab" class="tab-content active">
+                    <div class="select-group">
+                        <div class="select-label">Proteína (escolha 1):</div>
+                        <div class="select-option" onclick="selectProtein(this, 'Medalhão de Filet Mignon', 45)">
+                            <input type="radio" name="protein"> Medalhão de Filet Mignon <span style="margin-left: auto; color: #e94e24;">R$ 45,00</span>
+                        </div>
+                        <div class="select-option" onclick="selectProtein(this, 'Carne Moída (Patinho)', 45)">
+                            <input type="radio" name="protein"> Carne Moída (Patinho) <span style="margin-left: auto; color: #e94e24;">R$ 45,00</span>
+                        </div>
+                        <div class="select-option" onclick="selectProtein(this, 'Lagarto Assado ao Molho Madeira', 45)">
+                            <input type="radio" name="protein"> Lagarto Assado ao Molho Madeira <span style="margin-left: auto; color: #e94e24;">R$ 45,00</span>
+                        </div>
+                        <div class="select-option" onclick="selectProtein(this, 'Frango Assado', 36)">
+                            <input type="radio" name="protein"> Frango Assado <span style="margin-left: auto; color: #e94e24;">R$ 36,00</span>
+                        </div>
+                        <div class="select-option" onclick="selectProtein(this, 'Medalhão de Frango', 36)">
+                            <input type="radio" name="protein"> Medalhão de Frango <span style="margin-left: auto; color: #e94e24;">R$ 36,00</span>
+                        </div>
+                        <div class="select-option" onclick="selectProtein(this, 'Frango Desfiado', 36)">
+                            <input type="radio" name="protein"> Frango Desfiado <span style="margin-left: auto; color: #e94e24;">R$ 36,00</span>
+                        </div>
+                        <div class="select-option" onclick="selectProtein(this, 'Saint Peter Filé', 44)">
+                            <input type="radio" name="protein"> Saint Peter Filé <span style="margin-left: auto; color: #e94e24;">R$ 44,00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="select-group">
+                        <div class="select-label">Acompanhamentos (escolha 2):</div>
+                        <div class="select-option" onclick="selectSide(this, 'Arroz')">
+                            <input type="checkbox"> Arroz
+                        </div>
+                        <div class="select-option" onclick="selectSide(this, 'Arroz Integral')">
+                            <input type="checkbox"> Arroz Integral
+                        </div>
+                        <div class="select-option" onclick="selectSide(this, 'Feijão')">
+                            <input type="checkbox"> Feijão (sem linguiça e bacon)
+                        </div>
+                        <div class="select-option" onclick="selectSide(this, 'Lentilha')">
+                            <input type="checkbox"> Lentilha (com linguiça e bacon)
+                        </div>
+                    </div>
+                    
+                    <div class="select
